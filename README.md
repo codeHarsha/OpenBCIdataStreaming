@@ -129,6 +129,9 @@ If we want to connect raspberry pi to WiFi, find the below line in the dhcpcd.co
 
 ```bash
 sudo reboot
+sudo systemctl unmask hostapd
+sudo systemctl enable hostapd
+sudo systemctl start hostapd
 ```
 
 Now, Raspberry Pi's hotspot will not be available and you can connect Raspberry Pi to WiFi.
