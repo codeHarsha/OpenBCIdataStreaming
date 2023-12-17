@@ -36,9 +36,12 @@ Open the interfaces file with the following command
 ```bash
 sudo nano /etc/network/interfaces
 ```
-At the bottom of that file, add the following
+your file should look like below
 
 ```bash
+# interfaces(5) file used by ifup(8) and ifdown(8)
+# Include files from /etc/network/interfaces.d:
+source /etc/network/interfaces.d/*
 auto lo
 iface lo inet loopback
 
@@ -47,10 +50,10 @@ iface eth0 inet dhcp
 
 allow-hotplug wlan0
 iface wlan0 inet static
-    address 192.168.5.1
-    netmask 255.255.255.0
-    network 192.168.5.0
-    broadcast 192.168.5.255
+      address 192.168.5.1
+      netmask 255.255.255.0
+      network 192.168.5.0
+      broadcast 192.168.5.255
 
 ```
 
@@ -117,69 +120,61 @@ Restart the Raspberry Pi using the following command
 sudo reboot
 ```
 
-In the nearby devices raspberry pi's hotspot will be broadcasted as the SSID you provided in the hostapd file.
+After couple of minutes, In the nearby devices raspberry pi's hotspot will be broadcasted as the SSID you provided in the hostapd file.
 
-Currently, raspberry will not be able to connect to WiFi as we have edited /etc/dhcpcd.conf file.
+Currently, raspberry will not be able to connect to WiFi as we have only one wlan interface in raspberry pi, we have used that interface for making it hotspot.
 
-If we want to connect raspberry pi to WiFi, find the below line in the dhcpcd.conf file and comment it and reboot.
+If we want to connect raspberry pi to WiFi, follow below steps
+
+Before everything, you have to ssh into raspberry pi terminal, for that you will have to connect raspberry pi to LAN.
+
+
+Step 1: edit the dhcpcd file.
+
+```bash
+sudo nano /etc/dhcpcd.conf
+```
+
+Scroll down, and at the bottom of the file, and comment denyinterfaces wlan0.
 
 ```bash
 #denyinterfaces wlan0
 ```
 
+Step 2: Make changes to /etc/network/interfaces file.
+
+```bash
+sudo nano /etc/network/interfaces
+```
+your file should look like below
+
+```bash
+# interfaces(5) file used by ifup(8) and ifdown(8)
+# Include files from /etc/network/interfaces.d:
+source /etc/network/interfaces.d/*
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+    metric 300
+
+allow-hotplug wlan0
+iface wlan0 inet dhcp
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+    metric 200
+```
+
+if raspberry pi was previously configured to connect to particular wifi, you are good to go or else,
+For connecting raspberry pi to wifi, you can add wifi details to  /etc/wpa_supplicant/wpa_supplicant.conf file or you can use "sudo raspi-config"
+
+Restart the Raspberry Pi using the following command.
+
 ```bash
 sudo reboot
-sudo systemctl unmask hostapd
-sudo systemctl enable hostapd
-sudo systemctl start hostapd
 ```
 
 Now, Raspberry Pi's hotspot will not be available and you can connect Raspberry Pi to WiFi.
-
-## Installation
-
-Install all the required python packages using the package manager [pip](https://pip.pypa.io/en/stable/).
-
-
-## Run Python Code in Raspberry Pi
-
-SSH into raspberry pi with your user credentials
-
-```bash
-# The below commands will startup the http server for streaming Data through Internet
-
-cd Documents
-
-cd stream
-
-export FLASK_APP=streamBCI.py
-
-flask run --host=0.0.0.0
-```
-
-```bash
-# The below commands will startup the streaming setup to stream data through raspberry pi hotspot
-
-cd Documents
-
-cd streamHotspot
-
-# Run the python file in this directory (Python <file_name.py>)
-
-```
-
-## Run Xcode Project
-
-Navigate to project folder in terminal before opening the project in Xcode. Execute the following command to install required libraries.
-
-```bash
-pod install
-```
-
-Make sure that the Ip addresses of HTTP Server and Hotspot are correctly configured in the Xcode project.
-
-Now open the project in the Xcode run the project.
-
 
 ## Developed by Harshavardhan Reddy Panyala
 
