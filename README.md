@@ -1,8 +1,178 @@
 # Open BCI Data Streaming
 
+****Please go through each section entirely before executing the process for first time setup. As we are dealing with network files, we need to be careful****
+
+Existing Files in Our Raspberry Pi
+
+1)	/home/fatemeh/automatehotspot/setup.sh -> for automation hotspot script.
+2)	/home/fatemeh/automate-wifi/setup.sh -> for wifi reconfigure script.
+3)	/home/fatemeh/stream/stream2.py -> for backend python flask server code.
+4)	/etc/systemd/system/stream_app_instace2.service -> for autostart of backend.
+
+Automation of Making Raspberry Pi a
+Hotspot Access Point
+
+Steps:
+
+1)	SSH into Raspberry Pi.
+
+ssh fatemeh@eyecando.local
+
+2)	Create a shell script file.
+
+sudo nano setup.sh
+
+3)	Copy the AutomateHotspot.sh script from code files.
+
+4)	Paste the code into the shell script file you created.
+
+5)	Give execute access to setup.sh
+
+sudo chmod +x setup.sh
+
+6)	Run the script
+
+./setup.sh
+
+7)	Reboot Pi
+
+sudo reboot
+
+
+
+Things to note:
+
+1)	This process is only for the first time, from next time, you can just run the script and reboot.
+
+2)	You can’t ssh into pi after running this script because, there is no internet access for raspberry pi.
+
+3)	If you want to ssh into pi, connect pi to LAN.
+
+4)	Then run the Reconfigure Wi-fi Automation script. That will connect to Wifi.
+
+5)	The above reconfigure Wi-Fi automation is a manual process, you can do it from app as well.
+
+Reconfigure Wi-fi Automation
+
+Steps:
+
+1)	Give LAN connection to Raspberry Pi.
+
+2)	SSH into Raspberry Pi.
+
+ssh fatemeh@eyecando.local
+
+3)	Create a shell script file.
+
+sudo nano wifireconfigure.sh
+
+4)	Copy the ReconfigureWifi.sh script from code files.
+
+5)	Paste the code into the shell script file you created.
+
+6)	Give execute access to wifireconfigure.sh.
+
+sudo chmod +x wifireconfigure.sh
+
+7)	Run the script.
+
+./ wifireconfigure.sh
+
+8)	Reboot Pi.
+
+sudo reboot
+
+9)	Now, if you previously configured Wi-Fi, pi automatically connects to that Wi-Fi. If not, before rebooting, do
+
+sudo raspi-config -> system settings -> Wireless -> give ssid and password.
+
+
+Things to note:
+
+1)	When you reboot, you can remove LAN.
+
+2)	Raspberry Pi will no longer act as wifi hotspot.
+
+3)	This is a manual process, you can also make raspberry pi reconfigure and connect to wifi directly from the open bci streaming ios app, using wifi communication button. This functionality is already implemented.
+
+Services for Auto start of Backend When
+Raspberry Pi Turns ON
+
+Steps:
+
+1)	SSH into Raspberry Pi.
+
+ssh fatemeh@eyecando.local
+
+2)	cd into system directory
+
+cd /etc/systemd/system
+
+3)	create <your_desired_name>.service file
+
+sudo nano <your_desired_name>.service
+
+4)	Copy script from Strem_App.service and paste it to <your_desired_name>.service
+
+5)	Run the service file for the first time.
+
+sudo systemctl enable <your_desired_name>.service
+
+sudo systemctl start <your_desired_name>.service
+
+6)	To check the status
+
+sudo systemctl status <your_desired_name>.service
+
+Thing to note:
+
+1)	This is only for the first time. Every time you turn on the raspberry pi, these files will automatically run.
+
+2)	If you want to stop them.
+
+sudo systemctl stop <your_desired_name>.service
+
+3)	Make sure to change the path of the python file and virtual environment and user in the file, as per your details.
+
+4)	In our existing raspberry pi, I created 2 instances of stream service.
+
+stream_app.service and stream_app_instace2.service
+
+Backend Python Flask Server
+
+
+APIs and their purpose:
+
+1)	/api/startstream – starts bci stream instance.
+2)	/api/stream – calling application will get stream data.
+3)	/api/stopstream – stream is stopped.
+4)	/api/connect_wifi – runs reconfigure wifi script and connects to SSID that user provided.
+5)	/api/update_gaze – gets eye tracking data from calling application.
+
+
+Important things to note:
+
+1)	Please give correct path to reconfigure Wi-Fi script in the backend code.
+2)	This backend code is for Cyton.
+3)	This backend server will run as soon as the raspberry pi turns on.
+The updated code is stream2.py in our raspberry pi and it will be hosted on ipaddress:5001 port. It uses stream_app_instace2.service for auto start.
+
+
+iOS - Swift Code Setup
+
+1)	The IP address that needs to be configured in swift code can be get from below Linux command “ifconfig”
+2)	In the ifconfig output, look for wlan0: and get IP address beside inet.
+3)	Make sure to do “pod install”, is you are encountering dependency issues.
+
+
+Helpful Linux Commands
+
+1)	iwgetid -r -> to get the Wi-Fi SSID that pi currently connected to.
+2)	ifconfig -> to get to know IP address for calling APIs.
+
 This is a step by step process of how we can setup Raspberry Pi as hotspot manually.
 
-## Setup Hotspot for Raspberry Pi
+## Setup Hotspot manually for Raspberry Pi
 
 Make sure that both Raspberry pi and your remote computer is connected to ethernet (same network). If your Raspberry/Remote computer is connected to WiFi this setup will fail, as the setup requires changes in network configurations.
 
