@@ -1,6 +1,6 @@
 # Open BCI Data Streaming
 
-This is a step by step process of how we can setup Open BCI, Raspberry Pi, Python, X code to stream Open BCI Data in the IOS App.
+This is a step by step process of how we can setup Raspberry Pi as hotspot manually.
 
 ## Setup Hotspot for Raspberry Pi
 
