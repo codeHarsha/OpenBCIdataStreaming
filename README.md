@@ -9,18 +9,21 @@ Existing Files in Our Raspberry Pi
 3)	/home/fatemeh/stream/stream2.py -> for backend python flask server code.
 4)	/etc/systemd/system/stream_app_instace2.service -> for autostart of backend.
 
-Automation of Making Raspberry Pi a
-Hotspot Access Point
+Automation of Making Raspberry Pi a Hotspot Access Point
 
 Steps:
 
 1)	SSH into Raspberry Pi.
 
+```bash
 ssh fatemeh@eyecando.local
+```
 
 2)	Create a shell script file.
 
+```bash
 sudo nano setup.sh
+```
 
 3)	Copy the AutomateHotspot.sh script from code files.
 
@@ -28,17 +31,21 @@ sudo nano setup.sh
 
 5)	Give execute access to setup.sh
 
+```bash
 sudo chmod +x setup.sh
+```
 
 6)	Run the script
 
+```bash
 ./setup.sh
+```
 
 7)	Reboot Pi
 
+```bash
 sudo reboot
-
-
+```
 
 Things to note:
 
@@ -52,6 +59,7 @@ Things to note:
 
 5)	The above reconfigure Wi-Fi automation is a manual process, you can do it from app as well.
 
+
 Reconfigure Wi-fi Automation
 
 Steps:
@@ -60,11 +68,15 @@ Steps:
 
 2)	SSH into Raspberry Pi.
 
+```bash
 ssh fatemeh@eyecando.local
+```
 
 3)	Create a shell script file.
 
+```bash
 sudo nano wifireconfigure.sh
+```
 
 4)	Copy the ReconfigureWifi.sh script from code files.
 
@@ -72,20 +84,27 @@ sudo nano wifireconfigure.sh
 
 6)	Give execute access to wifireconfigure.sh.
 
+```bash
 sudo chmod +x wifireconfigure.sh
+```
 
 7)	Run the script.
 
+```bash
 ./ wifireconfigure.sh
+```
 
 8)	Reboot Pi.
 
+```bash
 sudo reboot
+```
 
 9)	Now, if you previously configured Wi-Fi, pi automatically connects to that Wi-Fi. If not, before rebooting, do
 
+```bash
 sudo raspi-config -> system settings -> Wireless -> give ssid and password.
-
+```
 
 Things to note:
 
@@ -95,34 +114,42 @@ Things to note:
 
 3)	This is a manual process, you can also make raspberry pi reconfigure and connect to wifi directly from the open bci streaming ios app, using wifi communication button. This functionality is already implemented.
 
-Services for Auto start of Backend When
-Raspberry Pi Turns ON
+Services for Auto start of Backend When Raspberry Pi Turns ON
 
 Steps:
 
 1)	SSH into Raspberry Pi.
 
+```bash
 ssh fatemeh@eyecando.local
+```
 
 2)	cd into system directory
 
+```bash
 cd /etc/systemd/system
+```
 
 3)	create <your_desired_name>.service file
 
+```bash
 sudo nano <your_desired_name>.service
+```
 
 4)	Copy script from Strem_App.service and paste it to <your_desired_name>.service
 
 5)	Run the service file for the first time.
 
+```bash
 sudo systemctl enable <your_desired_name>.service
-
 sudo systemctl start <your_desired_name>.service
+```
 
 6)	To check the status
 
+```bash
 sudo systemctl status <your_desired_name>.service
+```
 
 Thing to note:
 
@@ -130,13 +157,13 @@ Thing to note:
 
 2)	If you want to stop them.
 
+```bash
 sudo systemctl stop <your_desired_name>.service
+```
 
 3)	Make sure to change the path of the python file and virtual environment and user in the file, as per your details.
 
-4)	In our existing raspberry pi, I created 2 instances of stream service.
-
-stream_app.service and stream_app_instace2.service
+4)	In our existing raspberry pi, I created 2 instances of stream service, stream_app.service and stream_app_instace2.service
 
 Backend Python Flask Server
 
@@ -167,8 +194,10 @@ iOS - Swift Code Setup
 
 Helpful Linux Commands
 
-1)	iwgetid -r -> to get the Wi-Fi SSID that pi currently connected to.
-2)	ifconfig -> to get to know IP address for calling APIs.
+```bash
+iwgetid -r  #to get the Wi-Fi SSID that pi currently connected to.
+ifconfig #to get to know IP address for calling APIs.
+```
 
 This is a step by step process of how we can setup Raspberry Pi as hotspot manually.
 
